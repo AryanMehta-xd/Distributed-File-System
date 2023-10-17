@@ -50,11 +50,13 @@ public class Client extends Thread {
                 byte[] pack = new byte[data_in.readInt()];
                 data_in.readFully(pack);
                 
-                //rrL.add(fd.deserializeObject(pack));
-                //frame.setFileList(arrL);
-                frame.fileList.add(fd.deserializeObject(pack));
+                arrL.add(fd.deserializeObject(pack));
             }            
-            //frame.showFileList(arrL);
+            
+            frame.showFileList(arrL);
+            
+            //start CRUD Operations
+            
             
             socket.close();
             data_in.close();

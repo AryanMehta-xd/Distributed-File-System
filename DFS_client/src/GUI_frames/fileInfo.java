@@ -1,5 +1,6 @@
 package GUI_frames;
 
+import dfs_client.Client;
 import entities.publicFile;
 
 /**
@@ -9,10 +10,12 @@ import entities.publicFile;
 public class fileInfo extends javax.swing.JPanel {
 
     private publicFile file;
+    private Client cl;
     
-    public fileInfo(publicFile file) {
+    public fileInfo(publicFile file,Client cl) {
         initComponents();
         this.file = file;
+        this.cl = cl;
         init();
     }
 
@@ -32,6 +35,9 @@ public class fileInfo extends javax.swing.JPanel {
 
         lbl_fileCr = new javax.swing.JLabel();
         lbl_fileName = new javax.swing.JLabel();
+        btn_read = new javax.swing.JButton();
+        btn_update = new javax.swing.JButton();
+        btn_delete = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -41,6 +47,32 @@ public class fileInfo extends javax.swing.JPanel {
 
         lbl_fileName.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
+        btn_read.setBackground(new java.awt.Color(204, 204, 0));
+        btn_read.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btn_read.setForeground(new java.awt.Color(255, 255, 255));
+        btn_read.setText("R");
+        btn_read.setFocusPainted(false);
+        btn_read.setOpaque(true);
+        btn_read.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_readActionPerformed(evt);
+            }
+        });
+
+        btn_update.setBackground(new java.awt.Color(51, 0, 255));
+        btn_update.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btn_update.setForeground(new java.awt.Color(255, 255, 255));
+        btn_update.setText("U");
+        btn_update.setFocusPainted(false);
+        btn_update.setOpaque(true);
+
+        btn_delete.setBackground(new java.awt.Color(255, 0, 0));
+        btn_delete.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btn_delete.setForeground(new java.awt.Color(255, 255, 255));
+        btn_delete.setText("D");
+        btn_delete.setFocusPainted(false);
+        btn_delete.setOpaque(true);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -48,23 +80,45 @@ public class fileInfo extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_fileCr, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_fileName, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(167, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lbl_fileName, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_read, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_update, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_delete, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lbl_fileCr, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lbl_fileCr, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lbl_fileName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn_read)
+                        .addComponent(btn_update)
+                        .addComponent(btn_delete))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lbl_fileCr, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lbl_fileName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btn_readActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_readActionPerformed
+        
+    }//GEN-LAST:event_btn_readActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_delete;
+    private javax.swing.JButton btn_read;
+    private javax.swing.JButton btn_update;
     private javax.swing.JLabel lbl_fileCr;
     private javax.swing.JLabel lbl_fileName;
     // End of variables declaration//GEN-END:variables
