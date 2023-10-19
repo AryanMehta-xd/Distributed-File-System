@@ -12,6 +12,8 @@ public class fileInfo extends javax.swing.JPanel {
     private publicFile file;
     private Client cl;
     
+    private String fileName;
+    
     public fileInfo(publicFile file,Client cl) {
         initComponents();
         this.file = file;
@@ -20,8 +22,10 @@ public class fileInfo extends javax.swing.JPanel {
     }
 
     private void init(){
-        lbl_fileName.setText(file.getFileName());
+        fileName = file.getFileName();
+        lbl_fileName.setText(fileName);
         lbl_fileCr.setText("File Creator:"+file.getFile_Cr());
+        
     }
     
     /**
@@ -111,7 +115,7 @@ public class fileInfo extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_readActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_readActionPerformed
-        
+        cl.sendReadRequest(fileName);
     }//GEN-LAST:event_btn_readActionPerformed
 
 

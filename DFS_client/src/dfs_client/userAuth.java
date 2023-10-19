@@ -2,7 +2,6 @@ package dfs_client;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.Socket;
 
 /**
@@ -24,10 +23,7 @@ public class userAuth extends Thread {
             data_in = new DataInputStream(socket.getInputStream());
             data_out = new DataOutputStream(socket.getOutputStream());
 
-            while (!socket.isClosed()) {
-
-            }
-            shutDown();
+            while (!socket.isClosed());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,9 +59,25 @@ public class userAuth extends Thread {
         }
     }
 
-    public void shutDown() throws IOException {
-        socket.close();
-        data_in.close();
-        data_out.close();
+    public void disconnectUser(){
+        try {
+            data_out.writeUTF("USER_DISCONNECT_INIT");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void shutDown() {
+        try {
+            socket.close();
+            data_in.close();
+            data_out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void stopThread(){
+        status=false;
     }
 }

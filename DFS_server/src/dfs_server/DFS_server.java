@@ -10,8 +10,8 @@ public class DFS_server {
     public static void main(String[] args) {
         ServerClientAuth clientAuth = new ServerClientAuth();
         Server server = new Server();
-        clientAuth.startAuth();
-        server.startServer();
+        clientAuth.start();
+        server.start();
     }
 
 }
