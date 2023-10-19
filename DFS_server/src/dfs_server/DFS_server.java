@@ -1,8 +1,5 @@
 package dfs_server;
 
-import DAO.fileDAO;
-import entities.publicFile;
-import java.util.ArrayList;
 
 /**
  *
@@ -11,8 +8,10 @@ import java.util.ArrayList;
 public class DFS_server {
 
     public static void main(String[] args) {
+        ServerClientAuth clientAuth = new ServerClientAuth();
         Server server = new Server();
+        clientAuth.startAuth();
         server.startServer();
     }
-    
+
 }
