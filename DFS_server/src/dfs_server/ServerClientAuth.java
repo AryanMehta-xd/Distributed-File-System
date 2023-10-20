@@ -16,25 +16,6 @@ public class ServerClientAuth extends Thread {
     private ServerSocket ss;
     private UserDAO dao = new UserDAO();
 
-//    public void startAuth() {
-//        try {
-//            ss = new ServerSocket(9987);
-//            System.out.println("Port Started on:9987");
-//
-//            while (true) {
-//                Socket sco = ss.accept();
-//                clientAuth cl = new clientAuth(sco);
-//                System.out.println("User Connected!!");
-//
-//                Thread th = new Thread(cl);
-//                th.start();
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     @Override
     public void run() {
         try {
@@ -90,7 +71,7 @@ public class ServerClientAuth extends Thread {
                         System.out.println("User Auth Request!!");
 
                         data_out.writeInt(dao.verifyUser(username, password));
-                        status = false;
+                        //status = false;
                     }else if(command.equals("USER_DISCONNECT_INIT")){
                         System.out.println("User Disconnected!!");
                         status=false;

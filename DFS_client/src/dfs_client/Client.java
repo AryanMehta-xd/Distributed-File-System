@@ -72,14 +72,39 @@ public class Client extends Thread {
     }
     
     public int sendReadRequest(String fileName){
+        String response;
         try {
             data_out.writeUTF("READ_FILE_INIT");
             data_out.writeUTF(fileName);
             
-            return 0;
+            response = data_in.readUTF();
+            if(response.equals("FILE_ALREADY_LOCKED")){
+                return 0;
+            }else if(response.equals("FILE_LOCK_AVAILABLE")){
+                return 1;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
         }
+        return 0;
+    }
+    
+    public int sendWriteRequest(String fileName){
+        String response;
+        try {
+            data_out.writeUTF("WRITE_FILE_INIT");
+            data_out.writeUTF(fileName);
+            
+            response = data_in.readUTF();
+            if(response.equals("FILE_ALREADY_LOCKED")){
+                return 0;
+            }else if(response.equals("FILE_LOCK_AQUIRED")){
+                return 1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

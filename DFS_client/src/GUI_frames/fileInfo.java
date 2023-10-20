@@ -2,6 +2,7 @@ package GUI_frames;
 
 import dfs_client.Client;
 import entities.publicFile;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -69,6 +70,11 @@ public class fileInfo extends javax.swing.JPanel {
         btn_update.setText("U");
         btn_update.setFocusPainted(false);
         btn_update.setOpaque(true);
+        btn_update.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_updateActionPerformed(evt);
+            }
+        });
 
         btn_delete.setBackground(new java.awt.Color(255, 0, 0));
         btn_delete.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -115,8 +121,24 @@ public class fileInfo extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_readActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_readActionPerformed
-        cl.sendReadRequest(fileName);
+        int status = cl.sendReadRequest(fileName);
+        
+        if(status==0){
+            JOptionPane.showMessageDialog(null, "File Already Being Used!!");
+        }else{
+            JOptionPane.showMessageDialog(null, "File Accessed!");
+        }
     }//GEN-LAST:event_btn_readActionPerformed
+
+    private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
+        int status = cl.sendWriteRequest(fileName);
+        
+        if(status==1){
+            JOptionPane.showMessageDialog(null, "Write Lock Taken!");
+        }else{
+            JOptionPane.showMessageDialog(null, "File Already In Use!");
+        }
+    }//GEN-LAST:event_btn_updateActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

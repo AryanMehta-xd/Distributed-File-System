@@ -145,6 +145,7 @@ public class frame_username extends javax.swing.JFrame {
         }else{
             status = th.verifyUser(client_username, client_password);
             if(status==1){
+                th.disconnectUser();
                 dispose();
                 new frame_main(client_username).setVisible(true);
             }else{
