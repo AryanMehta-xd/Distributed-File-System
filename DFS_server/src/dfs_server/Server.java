@@ -171,7 +171,7 @@ public class Server extends Thread {
             Lock writeLock = flock.writeLock();
 
             //either read or write lock is taken
-            if ((!readLock.tryLock()) || (!writeLock.tryLock())) {
+            if (flock.isWriteLocked() || flock.getReadLockCount()!=0) {
                 data_out.writeUTF("FILE_ALREADY_LOCKED");
             } else {
                 writeLock.lock();
