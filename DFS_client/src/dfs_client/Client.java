@@ -43,17 +43,7 @@ public class Client extends Thread {
             //write Username to server
             data_out.writeUTF(frame.getClientUsername());
 
-            int arrS = data_in.readInt();
-            System.out.println(arrS);
-
-            for (int i = 0; i < arrS; i++) {
-                byte[] pack = new byte[data_in.readInt()];
-                data_in.readFully(pack);
-
-                arrL.add(fd.deserializeObject(pack));
-            }
-
-            frame.showFileList(arrL);
+            getFileList();
 
             //start CRUD Operations
             while (!socket.isClosed());
@@ -71,17 +61,17 @@ public class Client extends Thread {
             e.printStackTrace();
         }
     }
-    
-    public int sendReadRequest(String fileName){
+
+    public int sendReadRequest(String fileName) {
         String response;
         try {
             data_out.writeUTF("READ_FILE_INIT");
             data_out.writeUTF(fileName);
-            
+
             response = data_in.readUTF();
-            if(response.equals("FILE_ALREADY_LOCKED")){
+            if (response.equals("FILE_ALREADY_LOCKED")) {
                 return 0;
-            }else if(response.equals("FILE_LOCK_AVAILABLE")){
+            } else if (response.equals("FILE_LOCK_AVAILABLE")) {
                 return 1;
             }
         } catch (Exception e) {
@@ -90,17 +80,17 @@ public class Client extends Thread {
         }
         return 0;
     }
-    
-    public int sendWriteRequest(String fileName){
+
+    public int sendWriteRequest(String fileName) {
         String response;
         try {
             data_out.writeUTF("WRITE_FILE_INIT");
             data_out.writeUTF(fileName);
-            
+
             response = data_in.readUTF();
-            if(response.equals("FILE_ALREADY_LOCKED")){
+            if (response.equals("FILE_ALREADY_LOCKED")) {
                 return 0;
-            }else if(response.equals("FILE_LOCK_AQUIRED")){
+            } else if (response.equals("FILE_LOCK_AQUIRED")) {
                 return 1;
             }
         } catch (Exception e) {
@@ -108,16 +98,16 @@ public class Client extends Thread {
         }
         return 0;
     }
-    
-    public int sendReadUnlockRequest(String fileName){
+
+    public int sendReadUnlockRequest(String fileName) {
         String response;
         try {
             data_out.writeUTF("UNLOCK_FILE_INIT");
             data_out.writeUTF(fileName);
-            
+
             response = data_in.readUTF();
-            
-            if(response.equals("FILE_READ_UNLOCKED")){
+
+            if (response.equals("FILE_READ_UNLOCKED")) {
                 return 1;
             }
         } catch (Exception e) {
@@ -125,8 +115,53 @@ public class Client extends Thread {
         }
         return 0;
     }
-    
-    public void userDisconnect()throws IOException{
+
+    public int sendNewFile(publicFile file) {
+        String response;
+        try {
+            data_out.writeUTF("NEW_FILE_MODE");
+
+            byte[] b = fd.serializeObject(file);
+
+            //send length
+            data_out.writeInt(b.length);
+            data_out.write(b);
+
+            response = data_in.readUTF();
+            if (response.equals("FILE_RECEIVED")) {
+                return 1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public void userDisconnect() throws IOException {
         data_out.writeUTF("USER_DISCONNECT_INIT");
+    }
+
+    public void sendRefreshRequest() {
+        try {
+            arrL.clear();
+            data_out.writeUTF("FILE_LIST_REFRESH");
+            getFileList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getFileList() throws IOException {
+        int arrS = data_in.readInt();
+        System.out.println(arrS);
+
+        for (int i = 0; i < arrS; i++) {
+            byte[] pack = new byte[data_in.readInt()];
+            data_in.readFully(pack);
+
+            arrL.add(fd.deserializeObject(pack));
+        }
+
+        frame.showFileList(arrL);
     }
 }

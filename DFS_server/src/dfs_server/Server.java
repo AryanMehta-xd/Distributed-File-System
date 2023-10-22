@@ -12,7 +12,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -93,14 +92,7 @@ public class Server extends Thread {
                 System.out.println(clientName);
 
                 //fileList = fd.getAllFiles();
-                data_out.writeInt(fileList.size());
-
-                for (publicFile fld : fileList) {
-                    byte[] srlF = fd.serializeObject(fld);
-                    //send the length
-                    data_out.writeInt(srlF.length);
-                    data_out.write(srlF);
-                }
+                sendFileList();
 
                 while (status) {
                     command = data_in.readUTF();
@@ -111,6 +103,10 @@ public class Server extends Thread {
                         handleWriteLock();
                     } else if (command.equals("UNLOCK_FILE_INIT")) {
                         handleReadUnlockRequest();
+                    } else if (command.equals("NEW_FILE_MODE")) {
+                        handleNewFile();
+                    } else if (command.equals("FILE_LIST_REFRESH")) {
+                        sendFileList();
                     }
                 }
 
@@ -190,6 +186,30 @@ public class Server extends Thread {
             data_out.writeUTF("FILE_READ_UNLOCKED");
 
             System.out.println(req_fileName + " Unlocked!!");
+        }
+
+        private void handleNewFile() throws IOException {
+            byte[] fb = new byte[data_in.readInt()];
+
+            data_in.readFully(fb);
+            publicFile pf = fd.deserializeObject(fb);
+
+            fileList.add(pf);
+            fileLocks.put(pf, new ReentrantReadWriteLock());
+
+            fd.saveFile(pf);
+            data_out.writeUTF("FILE_RECEIVED");
+        }
+
+        private void sendFileList() throws IOException {
+            data_out.writeInt(fileList.size());
+
+            for (publicFile fld : fileList) {
+                byte[] srlF = fd.serializeObject(fld);
+                //send the length
+                data_out.writeInt(srlF.length);
+                data_out.write(srlF);
+            }
         }
     }
 }

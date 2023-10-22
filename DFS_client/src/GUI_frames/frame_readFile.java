@@ -33,7 +33,7 @@ public class frame_readFile extends javax.swing.JFrame {
             String line;
             
             while((line = br.readLine()) != null){
-                builder.append(line);
+                builder.append(line).append("\n");
             }
             ta_fileData.setText(builder.toString());
             ta_fileData.setCaretPosition(0);

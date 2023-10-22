@@ -3,6 +3,8 @@ package GUI_frames;
 import dfs_client.Client;
 import entities.publicFile;
 import java.util.ArrayList;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -26,9 +28,9 @@ public class frame_main extends javax.swing.JFrame {
     public frame_main(String username) {
         initComponents();
         this.clientUsername = username;
+        init();
         cl = new Client(this);
         cl.start();
-        init();
     }
 
     private void init(){
@@ -61,7 +63,7 @@ public class frame_main extends javax.swing.JFrame {
         body = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btn_addFile = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btn_refresh = new javax.swing.JButton();
         lbl_username = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -98,12 +100,22 @@ public class frame_main extends javax.swing.JFrame {
         btn_addFile.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btn_addFile.setForeground(new java.awt.Color(255, 255, 255));
         btn_addFile.setText("Add File\n");
+        btn_addFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_addFileActionPerformed(evt);
+            }
+        });
 
-        jButton1.setBackground(new java.awt.Color(0, 0, 255));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Refresh");
-        jButton1.setToolTipText("");
+        btn_refresh.setBackground(new java.awt.Color(0, 0, 255));
+        btn_refresh.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btn_refresh.setForeground(new java.awt.Color(255, 255, 255));
+        btn_refresh.setText("Refresh");
+        btn_refresh.setToolTipText("");
+        btn_refresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_refreshActionPerformed(evt);
+            }
+        });
 
         lbl_username.setBackground(new java.awt.Color(255, 255, 255));
         lbl_username.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
@@ -117,7 +129,7 @@ public class frame_main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(lbl_username, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btn_refresh)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_addFile)
                 .addContainerGap())
@@ -129,7 +141,7 @@ public class frame_main extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_refresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btn_addFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_username, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -139,6 +151,25 @@ public class frame_main extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btn_addFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addFileActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        int response = fileChooser.showSaveDialog(null);
+        
+        if(response==JFileChooser.APPROVE_OPTION){
+            publicFile pb = new publicFile(fileChooser.getSelectedFile(), clientUsername);
+            int status = cl.sendNewFile(pb);
+            
+            if(status==1){
+                JOptionPane.showMessageDialog(null, "File Added!");
+            }
+        }
+    }//GEN-LAST:event_btn_addFileActionPerformed
+
+    private void btn_refreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_refreshActionPerformed
+
+        cl.sendRefreshRequest();
+    }//GEN-LAST:event_btn_refreshActionPerformed
 
     /**
      * @param args the command line arguments
@@ -178,9 +209,7 @@ public class frame_main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel body;
     private javax.swing.JButton btn_addFile;
-    private javax.swing.JButton btn_exit;
-    private javax.swing.JButton btn_exit1;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btn_refresh;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbl_username;
