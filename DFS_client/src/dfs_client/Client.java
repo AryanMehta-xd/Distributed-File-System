@@ -102,7 +102,7 @@ public class Client extends Thread {
     public int sendReadUnlockRequest(String fileName) {
         String response;
         try {
-            data_out.writeUTF("UNLOCK_FILE_INIT");
+            data_out.writeUTF("UNLOCK_FILE_READ_INIT");
             data_out.writeUTF(fileName);
 
             response = data_in.readUTF();
@@ -163,5 +163,22 @@ public class Client extends Thread {
         }
 
         frame.showFileList(arrL);
+    }
+    
+    public int sendWriteUnlockRequest(publicFile file){
+        String response;
+        try {
+            data_out.writeUTF("UNLOCK_FILE_WRITE_INIT");
+            data_out.writeUTF(file.getFileName());
+            
+            response = data_in.readUTF();
+            
+            if(response.equals("FILE_WRITE_UNLOCKED")){
+                return 1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

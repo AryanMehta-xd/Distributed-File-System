@@ -134,7 +134,7 @@ public class fileInfo extends javax.swing.JPanel {
         int status = cl.sendWriteRequest(fileName);
         
         if(status==1){
-            JOptionPane.showMessageDialog(null, "Write Lock Taken!");
+            new frame_writeFile(file, cl).setVisible(true);
         }else{
             JOptionPane.showMessageDialog(null, "File Already In Use!");
         }
