@@ -126,7 +126,7 @@ public class fileInfo extends javax.swing.JPanel {
         if(status==0){
             JOptionPane.showMessageDialog(null, "File Already Being Used!!");
         }else{
-            JOptionPane.showMessageDialog(null, "File Accessed!");
+            new frame_readFile(file, cl).setVisible(true);
         }
     }//GEN-LAST:event_btn_readActionPerformed
 

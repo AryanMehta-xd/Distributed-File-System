@@ -109,6 +109,8 @@ public class Server extends Thread {
                         handleReadLock();
                     } else if (command.equals("WRITE_FILE_INIT")) {
                         handleWriteLock();
+                    } else if(command.equals("UNLOCK_FILE_INIT")){
+                        handleReadUnlockRequest();
                     }
                 }
 
@@ -177,6 +179,20 @@ public class Server extends Thread {
                 writeLock.lock();
                 data_out.writeUTF("FILE_LOCK_AQUIRED");
             }
+        }
+        
+        private void handleReadUnlockRequest() throws IOException{
+            String req_fileName = data_in.readUTF();
+            
+            ReentrantReadWriteLock flLock = getFileLocks(req_fileName);
+            
+            Lock readLock = flLock.readLock();
+            
+            //unlock the lock
+            readLock.unlock();
+            data_out.writeUTF("FILE_READ_UNLOCKED");
+            
+            System.out.println(req_fileName+" Unlocked!!");
         }
     }
 }
