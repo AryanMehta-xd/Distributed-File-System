@@ -109,7 +109,7 @@ public class Server extends Thread {
                         handleReadLock();
                     } else if (command.equals("WRITE_FILE_INIT")) {
                         handleWriteLock();
-                    } else if(command.equals("UNLOCK_FILE_INIT")){
+                    } else if (command.equals("UNLOCK_FILE_INIT")) {
                         handleReadUnlockRequest();
                     }
                 }
@@ -143,25 +143,22 @@ public class Server extends Thread {
             return null;
         }
 
-        private void handleReadLock() throws IOException,InterruptedException {
+        private void handleReadLock() throws IOException, InterruptedException {
             String req_fileName = data_in.readUTF();
             ReentrantReadWriteLock fLock = getFileLocks(req_fileName);
 
             Lock readLock = fLock.readLock();
-
-            //boolean lStatus = writeLock.tryLock();
-
             //check write lock
             //write lock is already aquired
-                if (fLock.isWriteLocked()) {
-                    data_out.writeUTF("FILE_ALREADY_LOCKED");
-                    System.out.println("Lock Denied!");
-                } else {
-                    //aquire the lock
-                    readLock.lock();
-                    System.out.println("Locked!");
-                    data_out.writeUTF("FILE_LOCK_AVAILABLE");
-                }
+            if (fLock.isWriteLocked()) {
+                data_out.writeUTF("FILE_ALREADY_LOCKED");
+                System.out.println("Lock Denied!");
+            } else {
+                //aquire the lock
+                readLock.lock();
+                System.out.println("Locked!");
+                data_out.writeUTF("FILE_LOCK_AVAILABLE");
+            }
         }
 
         private void handleWriteLock() throws IOException {
@@ -173,26 +170,26 @@ public class Server extends Thread {
             Lock writeLock = flock.writeLock();
 
             //either read or write lock is taken
-            if (flock.isWriteLocked() || flock.getReadLockCount()!=0) {
+            if (flock.isWriteLocked() || flock.getReadLockCount() != 0) {
                 data_out.writeUTF("FILE_ALREADY_LOCKED");
             } else {
                 writeLock.lock();
                 data_out.writeUTF("FILE_LOCK_AQUIRED");
             }
         }
-        
-        private void handleReadUnlockRequest() throws IOException{
+
+        private void handleReadUnlockRequest() throws IOException {
             String req_fileName = data_in.readUTF();
-            
+
             ReentrantReadWriteLock flLock = getFileLocks(req_fileName);
-            
+
             Lock readLock = flLock.readLock();
-            
+
             //unlock the lock
             readLock.unlock();
             data_out.writeUTF("FILE_READ_UNLOCKED");
-            
-            System.out.println(req_fileName+" Unlocked!!");
+
+            System.out.println(req_fileName + " Unlocked!!");
         }
     }
 }

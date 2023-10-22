@@ -5,6 +5,7 @@ import GUI_frames.frame_main;
 import entities.publicFile;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -123,5 +124,9 @@ public class Client extends Thread {
             e.printStackTrace();
         }
         return 0;
+    }
+    
+    public void userDisconnect()throws IOException{
+        data_out.writeUTF("USER_DISCONNECT_INIT");
     }
 }
