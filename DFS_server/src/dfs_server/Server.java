@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -71,6 +72,8 @@ public class Server extends Thread {
         private String command = "";
         private boolean status = true;
 
+        private HashMap<clientThread,ReentrantReadWriteLock> heldLocks;
+        
         private DataInputStream data_in;
         private DataOutputStream data_out;
         private ObjectOutputStream obj_out;
@@ -80,6 +83,7 @@ public class Server extends Thread {
         public clientThread(Socket sc) {
             this.clientSocket = sc;
             fd = new fileDAO();
+            heldLocks = new HashMap<>();
         }
 
         @Override
@@ -114,6 +118,7 @@ public class Server extends Thread {
 
             } catch (SocketException se) {
                 System.out.println(clientName + " Disconnected!!");
+                unlockAllFiles();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -155,6 +160,7 @@ public class Server extends Thread {
                 //aquire the lock
                 readLock.lock();
                 System.out.println("Locked!");
+                heldLocks.put(this, fLock);
                 data_out.writeUTF("FILE_LOCK_AVAILABLE");
             }
         }
@@ -172,6 +178,7 @@ public class Server extends Thread {
                 data_out.writeUTF("FILE_ALREADY_LOCKED");
             } else {
                 writeLock.lock();
+                heldLocks.put(this, flock);
                 data_out.writeUTF("FILE_LOCK_AQUIRED");
             }
         }
@@ -186,7 +193,7 @@ public class Server extends Thread {
             //unlock the lock
             readLock.unlock();
             data_out.writeUTF("FILE_READ_UNLOCKED");
-
+            heldLocks.remove(this, flLock);
             System.out.println(req_fileName + " Unlocked!!");
         }
 
@@ -222,6 +229,24 @@ public class Server extends Thread {
             
             wlock.unlock();
             data_out.writeUTF("FILE_WRITE_UNLOCKED");
+            heldLocks.remove(this, writeLock);
+        }
+        
+        private void unlockAllFiles(){
+            for (Map.Entry<clientThread, ReentrantReadWriteLock> entry : heldLocks.entrySet()) {
+                ReentrantReadWriteLock value = entry.getValue();
+                Lock rl = value.readLock();
+                Lock wl = value.writeLock();
+                
+                if(value.isWriteLocked()){
+                    wl.unlock();
+                    System.out.println("Write Unlocked!");
+                }
+                if(value.getReadLockCount()!=0){
+                    rl.unlock();
+                    System.out.println("Read Unlocked!");
+                }
+            }
         }
     }
 }
