@@ -2,9 +2,11 @@ package GUI_frames;
 
 import dfs_client.Client;
 import entities.publicFile;
+import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import javax.swing.JScrollBar;
 
 /**
  *
@@ -68,7 +70,6 @@ public class frame_writeFile extends javax.swing.JFrame {
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        ta_fileData.setBackground(new java.awt.Color(255, 255, 255));
         ta_fileData.setColumns(20);
         ta_fileData.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         ta_fileData.setLineWrap(true);
@@ -132,7 +133,7 @@ public class frame_writeFile extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_exitActionPerformed
 
     private void ta_fileDataKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ta_fileDataKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_S && evt.isControlDown()){
+        if (evt.getKeyCode() == KeyEvent.VK_S && evt.isControlDown()) {
             System.out.println("Ctrl+s is pressed!");
         }
     }//GEN-LAST:event_ta_fileDataKeyPressed

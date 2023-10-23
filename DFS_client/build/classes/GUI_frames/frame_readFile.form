@@ -50,8 +50,8 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jScrollPane1" alignment="0" pref="698" max="32767" attributes="0"/>
-              <Group type="102" alignment="0" attributes="0">
+              <Component id="jScrollPane1" pref="698" max="32767" attributes="0"/>
+              <Group type="102" attributes="0">
                   <Component id="lbl_fileName" min="-2" pref="270" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="btn_exit" min="-2" max="-2" attributes="0"/>
@@ -62,8 +62,8 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="btn_exit" alignment="0" max="32767" attributes="0"/>
-                      <Component id="lbl_fileName" alignment="0" max="32767" attributes="0"/>
+                      <Component id="btn_exit" max="32767" attributes="0"/>
+                      <Component id="lbl_fileName" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane1" pref="569" max="32767" attributes="0"/>
@@ -84,6 +84,10 @@
           <SubComponents>
             <Component class="javax.swing.JTextArea" name="ta_fileData">
               <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
                 <Property name="columns" type="int" value="20"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="18" style="0"/>
@@ -91,9 +95,6 @@
                 <Property name="lineWrap" type="boolean" value="true"/>
                 <Property name="rows" type="int" value="5"/>
               </Properties>
-              <Events>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="ta_fileDataKeyPressed"/>
-              </Events>
             </Component>
           </SubComponents>
         </Container>
