@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+        <file>
+            <url>src/DAO/fileDAO.java</url>
+            <bookmark id="1">
+                <name/>
+                <line>54</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/os_cie3/DFS_client/src/GUI_frames/frame_readFile.java</file>
-            <file>file:/E:/os_cie3/DFS_client/src/GUI_frames/fileInfo.java</file>
+            <file>file:/E:/os_cie3/DFS_client/src/DAO/fileDAO.java</file>
             <file>file:/E:/os_cie3/DFS_client/src/GUI_frames/frame_writeFile.java</file>
             <file>file:/E:/os_cie3/DFS_client/src/dfs_client/Client.java</file>
         </group>

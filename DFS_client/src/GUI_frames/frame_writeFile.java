@@ -1,12 +1,14 @@
 package GUI_frames;
 
+import DAO.fileDAO;
 import dfs_client.Client;
 import entities.publicFile;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
-import javax.swing.JScrollBar;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -17,12 +19,20 @@ public class frame_writeFile extends javax.swing.JFrame {
     private publicFile mainFile;
     private Client cl;
 
+    private String fileName;
+    private File contentFile;
+
+    private fileDAO fd;
+
     public frame_writeFile(publicFile file, Client cl) {
         initComponents();
         this.cl = cl;
         this.mainFile = file;
+        this.fileName = file.getFileName();
+        this.contentFile = file.getLocal_file();
+        fd = new fileDAO();
         init();
-        readFile();
+        fd.readFromFile(contentFile, ta_fileData);
     }
 
     private void init() {
@@ -33,14 +43,11 @@ public class frame_writeFile extends javax.swing.JFrame {
     private void readFile() {
         try {
             BufferedReader br = new BufferedReader(new FileReader(mainFile.getLocal_file()));
-            StringBuilder builder = new StringBuilder();
             String line;
 
             while ((line = br.readLine()) != null) {
-                builder.append(line).append("\n");
+                System.out.println(line);
             }
-            ta_fileData.setText(builder.toString());
-            ta_fileData.setCaretPosition(0);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -128,13 +135,21 @@ public class frame_writeFile extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_exitActionPerformed
-        cl.sendWriteUnlockRequest(mainFile);
+        cl.sendWriteUnlockRequest(fileName);
         dispose();
     }//GEN-LAST:event_btn_exitActionPerformed
 
     private void ta_fileDataKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ta_fileDataKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_S && evt.isControlDown()) {
-            System.out.println("Ctrl+s is pressed!");
+            fd.writeToFile(contentFile, ta_fileData.getText());
+            
+            int status=JOptionPane.showConfirmDialog(null, "Click Yes to Confirm Changes!");
+            if(status==JOptionPane.OK_OPTION){
+                int rs = cl.sendUpdatedFile(mainFile);
+                if(rs==1){
+                    JOptionPane.showMessageDialog(null, "Updated Successfully!");
+                }
+            }
         }
     }//GEN-LAST:event_ta_fileDataKeyPressed
 

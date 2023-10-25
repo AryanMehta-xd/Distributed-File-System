@@ -165,15 +165,35 @@ public class Client extends Thread {
         frame.showFileList(arrL);
     }
     
-    public int sendWriteUnlockRequest(publicFile file){
+    public int sendWriteUnlockRequest(String filename){
         String response;
         try {
             data_out.writeUTF("UNLOCK_FILE_WRITE_INIT");
-            data_out.writeUTF(file.getFileName());
+            data_out.writeUTF(filename);
             
             response = data_in.readUTF();
             
             if(response.equals("FILE_WRITE_UNLOCKED")){
+                return 1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
+    public int sendUpdatedFile(publicFile file){
+        try {
+            data_out.writeUTF("FILE_UPDATE_INIT");
+            data_out.writeUTF(file.getFileName());
+            
+            byte[] fb = fd.serializeObject(file);
+            
+            data_out.writeInt(fb.length);
+            data_out.write(fb);
+            
+            String resp = data_in.readUTF();
+            if(resp.equals("UPDATE_SUCCESS")){
                 return 1;
             }
         } catch (Exception e) {

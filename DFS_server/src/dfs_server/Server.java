@@ -28,7 +28,7 @@ public class Server extends Thread {
     private fileDAO fdAO;
     private static final int PORT_NUM = 9988;
 
-    private HashMap<publicFile, ReentrantReadWriteLock> fileLocks;
+    private HashMap<String, ReentrantReadWriteLock> fileLocks;
 
     public Server() {
         fdAO = new fileDAO();
@@ -61,7 +61,7 @@ public class Server extends Thread {
     private void initFileLocks() {
         for (publicFile file : fileList) {
             ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-            fileLocks.put(file, lock);
+            fileLocks.put(file.getFileName(), lock);
         }
     }
 
@@ -113,6 +113,8 @@ public class Server extends Thread {
                         sendFileList();
                     }else if(command.equals("UNLOCK_FILE_WRITE_INIT")){
                         handleWriteUnlockRequest();
+                    }else if(command.equals("FILE_UPDATE_INIT")){
+                        handleFileUpdateRequest();
                     }
                 }
 
@@ -136,14 +138,7 @@ public class Server extends Thread {
         }
 
         private ReentrantReadWriteLock getFileLocks(String fileName) {
-            ReentrantReadWriteLock l;
-            for (publicFile f : fileList) {
-                if (f.getFileName().equals(fileName)) {
-                    l = fileLocks.get(f);
-                    return l;
-                }
-            }
-            return null;
+            return fileLocks.get(fileName);
         }
 
         private void handleReadLock() throws IOException, InterruptedException {
@@ -204,7 +199,7 @@ public class Server extends Thread {
             publicFile pf = fd.deserializeObject(fb);
 
             fileList.add(pf);
-            fileLocks.put(pf, new ReentrantReadWriteLock());
+            fileLocks.put(pf.getFileName(), new ReentrantReadWriteLock());
 
             fd.saveFile(pf);
             data_out.writeUTF("FILE_RECEIVED");
@@ -247,6 +242,20 @@ public class Server extends Thread {
                     System.out.println("Read Unlocked!");
                 }
             }
+        }
+        
+        private void handleFileUpdateRequest() throws IOException{
+            String filename = data_in.readUTF();
+            int size = data_in.readInt();
+            byte[] b=  new byte[size];
+            data_in.readFully(b);
+            
+            publicFile pb = fd.deserializeObject(b);
+            fd.saveFile(pb);
+            fileList.clear();
+            fileList = fd.getAllFiles();
+            
+            data_out.writeUTF("UPDATE_SUCCESS");
         }
     }
 }

@@ -1,7 +1,9 @@
 package GUI_frames;
 
+import DAO.fileDAO;
 import dfs_client.Client;
 import entities.publicFile;
+import java.io.File;
 import javax.swing.JOptionPane;
 
 /**
@@ -26,7 +28,6 @@ public class fileInfo extends javax.swing.JPanel {
         fileName = file.getFileName();
         lbl_fileName.setText(fileName);
         lbl_fileCr.setText("File Creator:"+file.getFile_Cr());
-        
     }
     
     /**
