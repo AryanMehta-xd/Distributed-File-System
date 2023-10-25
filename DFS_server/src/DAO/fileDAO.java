@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
@@ -77,5 +78,15 @@ public class fileDAO {
             e.printStackTrace();
         }
         return null;
+    }
+    
+    public String getUpdateString(String update){
+        LocalDateTime localDateTime = LocalDateTime.now();
+        
+        String fr = String.format("%02d-%02d-%02d\t%02d:%02d:%02d\t",
+                localDateTime.getDayOfMonth(),localDateTime.getMonthValue(),localDateTime.getYear(),
+                localDateTime.getHour(), localDateTime.getMinute(), localDateTime.getSecond());
+        
+        return fr+update;
     }
 }

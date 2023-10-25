@@ -1,5 +1,7 @@
 package dfs_server;
 
+import DAO.fileDAO;
+
 
 /**
  *
@@ -12,6 +14,7 @@ public class DFS_server {
         Server server = new Server();
         clientAuth.start();
         server.start();
+
     }
 
 }

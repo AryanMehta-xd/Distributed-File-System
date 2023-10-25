@@ -11,13 +11,22 @@ public class publicFile implements Serializable{
     private File local_file;
     private String file_Cr;
     private String fileName;
-
+    private String lastUpdate;
+    
     public publicFile(File local_file, String file_Cr) {
         this.local_file = local_file;
         this.file_Cr = file_Cr;
         this.fileName = local_file.getName();
     }
 
+    public String getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(String lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+    
     public File getLocal_file() {
         return local_file;
     }
