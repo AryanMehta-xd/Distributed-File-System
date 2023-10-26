@@ -124,10 +124,13 @@ public class frame_writeFile extends javax.swing.JFrame {
 
     private void ta_fileDataKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ta_fileDataKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_S && evt.isControlDown()) {
+            contentString = ta_fileData.getText();
             
+            mainFile.setFileData(contentString);
             int status=JOptionPane.showConfirmDialog(null, "Click Yes to Confirm Changes!");
             if(status==JOptionPane.OK_OPTION){
                 int rs = cl.sendUpdatedFile(mainFile);
+                System.out.println(mainFile.getFileData());
                 if(rs==1){
                     JOptionPane.showMessageDialog(null, "Updated Successfully!");
                 }
