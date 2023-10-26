@@ -101,20 +101,30 @@ public class Server extends Thread {
                 while (status) {
                     command = data_in.readUTF();
 
-                    if (command.equals("READ_FILE_INIT")) {
-                        handleReadLock();
-                    } else if (command.equals("WRITE_FILE_INIT")) {
-                        handleWriteLock();
-                    } else if (command.equals("UNLOCK_FILE_READ_INIT")) {
-                        handleReadUnlockRequest();
-                    } else if (command.equals("NEW_FILE_MODE")) {
-                        handleNewFile();
-                    } else if (command.equals("FILE_LIST_REFRESH")) {
-                        sendFileList();
-                    }else if(command.equals("UNLOCK_FILE_WRITE_INIT")){
-                        handleWriteUnlockRequest();
-                    }else if(command.equals("FILE_UPDATE_INIT")){
-                        handleFileUpdateRequest();
+                    switch (command) {
+                        case "READ_FILE_INIT":
+                            handleReadLock();
+                            break;
+                        case "WRITE_FILE_INIT":
+                            handleWriteLock();
+                            break;
+                        case "UNLOCK_FILE_READ_INIT":
+                            handleReadUnlockRequest();
+                            break;
+                        case "NEW_FILE_MODE":
+                            handleNewFile();
+                            break;
+                        case "FILE_LIST_REFRESH":
+                            sendFileList();
+                            break;
+                        case "UNLOCK_FILE_WRITE_INIT":
+                            handleWriteUnlockRequest();
+                            break;
+                        case "FILE_UPDATE_INIT":
+                            handleFileUpdateRequest();
+                            break;
+                        default:
+                            break;
                     }
                 }
 
