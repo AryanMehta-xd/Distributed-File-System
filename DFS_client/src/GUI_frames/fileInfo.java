@@ -26,6 +26,7 @@ public class fileInfo extends javax.swing.JPanel {
         fileName = file.getFileName();
         lbl_fileName.setText(fileName);
         lbl_fileCr.setText("File Creator:"+file.getFile_Cr());
+        lbl_last_update.setText(file.getLastUpdate());
     }
     
     /**
@@ -42,12 +43,13 @@ public class fileInfo extends javax.swing.JPanel {
         btn_read = new javax.swing.JButton();
         btn_update = new javax.swing.JButton();
         btn_delete = new javax.swing.JButton();
+        lbl_last_update = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         lbl_fileCr.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lbl_fileCr.setText("File Creator:");
+        lbl_fileCr.setText("Creator:");
 
         lbl_fileName.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
@@ -82,6 +84,8 @@ public class fileInfo extends javax.swing.JPanel {
         btn_delete.setFocusPainted(false);
         btn_delete.setOpaque(true);
 
+        lbl_last_update.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -99,22 +103,24 @@ public class fileInfo extends javax.swing.JPanel {
                         .addComponent(btn_delete, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lbl_fileCr, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbl_last_update, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_fileCr, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_last_update, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_fileName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btn_read)
                         .addComponent(btn_update)
-                        .addComponent(btn_delete))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lbl_fileCr, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lbl_fileName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btn_delete)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -146,5 +152,6 @@ public class fileInfo extends javax.swing.JPanel {
     private javax.swing.JButton btn_update;
     private javax.swing.JLabel lbl_fileCr;
     private javax.swing.JLabel lbl_fileName;
+    private javax.swing.JLabel lbl_last_update;
     // End of variables declaration//GEN-END:variables
 }

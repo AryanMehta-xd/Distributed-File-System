@@ -14,7 +14,6 @@ public class DFS_server {
         Server server = new Server();
         clientAuth.start();
         server.start();
-
     }
 
 }

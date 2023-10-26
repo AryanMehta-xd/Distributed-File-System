@@ -45,10 +45,12 @@ public class Server extends Thread {
             ss = new ServerSocket(PORT_NUM);
             System.out.println("Server Listening on:" + PORT_NUM);
 
+            fdAO.addLog("Server Started on Port:"+PORT_NUM);
+            
             while (true) {
                 Socket soc = ss.accept();
                 System.out.println("Connection Established via :" + soc.getInetAddress());
-
+                
                 clientThread cl = new clientThread(soc);
                 Thread th = new Thread(cl);
                 th.start();
@@ -96,6 +98,7 @@ public class Server extends Thread {
                 clientName = data_in.readUTF();
                 System.out.println(clientName+" Connected!!");
 
+                fd.addLog(clientName+" Connected Via IP:"+clientSocket.getInetAddress()+" VIA:"+PORT_NUM);
                 sendFileList();
 
                 while (status) {
@@ -130,6 +133,7 @@ public class Server extends Thread {
 
             } catch (SocketException | EOFException se) {
                 System.out.println(clientName + " Disconnected!!");
+                fd.addLog(clientName+" DISCONNECTED"+" VIA:"+PORT_NUM);
                 unlockAllFiles();
                 shutDown();
             } catch(Exception e){
@@ -162,12 +166,14 @@ public class Server extends Thread {
             if (fLock.isWriteLocked()) {
                 data_out.writeUTF("FILE_ALREADY_LOCKED");
                 System.out.println("Lock Denied!");
+                fd.addLog(clientName+" READ LOCK REQUEST ->"+req_fileName+" :DENIED"+" VIA:"+PORT_NUM);
             } else {
                 //aquire the lock
                 readLock.lock();
                 System.out.println("Locked!");
                 heldLocks.put(this, fLock);
                 data_out.writeUTF("FILE_LOCK_AVAILABLE");
+                fd.addLog(clientName+" READ LOCK REQUEST ->"+req_fileName+" :ACCEPTED"+" VIA:"+PORT_NUM);
             }
         }
 
@@ -182,10 +188,12 @@ public class Server extends Thread {
             //either read or write lock is taken
             if (flock.isWriteLocked() || flock.getReadLockCount() != 0) {
                 data_out.writeUTF("FILE_ALREADY_LOCKED");
+                fd.addLog(clientName+" WRITE LOCK REQUEST ->"+req_fileName+" :DENIED"+" VIA:"+PORT_NUM);
             } else {
                 writeLock.lock();
                 heldLocks.put(this, flock);
                 data_out.writeUTF("FILE_LOCK_AQUIRED");
+                fd.addLog(clientName+" WRITE LOCK REQUEST ->"+req_fileName+" :ACCEPTED"+" VIA:"+PORT_NUM);
             }
         }
 
@@ -201,6 +209,7 @@ public class Server extends Thread {
             data_out.writeUTF("FILE_READ_UNLOCKED");
             heldLocks.remove(this, flLock);
             System.out.println(req_fileName + " Unlocked!!");
+            fd.addLog(clientName+" READ UNLOCK REQUEST ->"+req_fileName+" :SUCCESS"+" VIA:"+PORT_NUM);
         }
 
         private void handleNewFile() throws IOException {
@@ -211,8 +220,9 @@ public class Server extends Thread {
 
             fileList.add(pf);
             fileLocks.put(pf.getFileName(), new ReentrantReadWriteLock());
-
+            pf.addFileUpdate(clientName+"(Creator)");
             fd.saveFile(pf);
+            fd.addLog(clientName+" NEW FILE ADD REQUEST->"+pf.getFileName()+" :SUCCESS"+" VIA:"+PORT_NUM);
             data_out.writeUTF("FILE_RECEIVED");
         }
 
@@ -236,6 +246,7 @@ public class Server extends Thread {
             wlock.unlock();
             data_out.writeUTF("FILE_WRITE_UNLOCKED");
             heldLocks.remove(this, writeLock);
+            fd.addLog(clientName+" WRITE UNLOCK REQUEST ->"+fileName+" :SUCCESS"+" VIA:"+PORT_NUM);
         }
         
         private void unlockAllFiles(){
@@ -263,6 +274,9 @@ public class Server extends Thread {
             
             publicFile pb = fd.deserializeObject(b);
             fd.saveFile(pb);
+            pb.addFileUpdate(clientName);
+            fd.addLog(clientName+" FILE UPDATE REQUEST ->"+filename+" :SUCCESS"+" VIA:"+PORT_NUM);
+            
             fileList.clear();
             fileList = fd.getAllFiles();
             

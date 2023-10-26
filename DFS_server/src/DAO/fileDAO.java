@@ -1,11 +1,13 @@
 package DAO;
 
 import entities.publicFile;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalDateTime;
@@ -78,10 +80,23 @@ public class fileDAO {
     public String getUpdateString(String update){
         LocalDateTime localDateTime = LocalDateTime.now();
         
-        String fr = String.format("%02d-%02d-%02d\t%02d:%02d:%02d\t",
+        String fr = String.format("\n%02d-%02d-%02d\t%02d:%02d:%02d\t",
                 localDateTime.getDayOfMonth(),localDateTime.getMonthValue(),localDateTime.getYear(),
                 localDateTime.getHour(), localDateTime.getMinute(), localDateTime.getSecond());
         
         return fr+update;
+    }
+    
+    public void addLog(String log){
+        try {
+            File logFile = new File("server_log.txt");
+            
+            BufferedWriter bw = new BufferedWriter(new FileWriter(logFile,true));
+            bw.write(getUpdateString(log));
+            
+            bw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

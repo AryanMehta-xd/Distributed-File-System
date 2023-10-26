@@ -5,7 +5,7 @@
             <url>src/DAO/fileDAO.java</url>
             <bookmark id="1">
                 <name/>
-                <line>46</line>
+                <line>36</line>
                 <key/>
             </bookmark>
         </file>
@@ -13,9 +13,9 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/E:/os_cie3/DFS_client/src/GUI_frames/fileInfo.java</file>
+            <file>file:/E:/os_cie3/DFS_client/src/entities/publicFile.java</file>
             <file>file:/E:/os_cie3/DFS_client/src/GUI_frames/frame_writeFile.java</file>
             <file>file:/E:/os_cie3/DFS_client/src/dfs_client/Client.java</file>
-            <file>file:/E:/os_cie3/DFS_client/src/GUI_frames/frame_main.java</file>
         </group>
     </open-files>
 </project-private>
