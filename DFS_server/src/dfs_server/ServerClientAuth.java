@@ -3,6 +3,8 @@ package dfs_server;
 import DAO.UserDAO;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -77,9 +79,20 @@ public class ServerClientAuth extends Thread {
                         status=false;
                     }
                 }
-            } catch (SocketException se) {
+            } catch (SocketException | EOFException se) {
                 System.out.println("Client Disconncted!!");
+                shutDown();
             }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        
+        private void shutDown(){
+            try {
+                clientSocket.close();
+                data_in.close();
+                data_out.close();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

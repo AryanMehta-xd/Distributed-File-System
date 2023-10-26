@@ -4,6 +4,7 @@ import DAO.fileDAO;
 import entities.publicFile;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -93,9 +94,8 @@ public class Server extends Thread {
                 data_out = new DataOutputStream(clientSocket.getOutputStream());
 
                 clientName = data_in.readUTF();
-                System.out.println(clientName);
+                System.out.println(clientName+" Connected!!");
 
-                //fileList = fd.getAllFiles();
                 sendFileList();
 
                 while (status) {
@@ -128,10 +128,11 @@ public class Server extends Thread {
                     }
                 }
 
-            } catch (SocketException se) {
+            } catch (SocketException | EOFException se) {
                 System.out.println(clientName + " Disconnected!!");
                 unlockAllFiles();
-            } catch (Exception e) {
+                shutDown();
+            } catch(Exception e){
                 e.printStackTrace();
             }
         }

@@ -130,7 +130,6 @@ public class frame_writeFile extends javax.swing.JFrame {
             int status=JOptionPane.showConfirmDialog(null, "Click Yes to Confirm Changes!");
             if(status==JOptionPane.OK_OPTION){
                 int rs = cl.sendUpdatedFile(mainFile);
-                System.out.println(mainFile.getFileData());
                 if(rs==1){
                     JOptionPane.showMessageDialog(null, "Updated Successfully!");
                 }
