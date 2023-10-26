@@ -18,7 +18,7 @@ public class userAuth extends Thread {
     @Override
     public void run() {
         try {
-            socket = new Socket("10.25.0.139", 9987);
+            socket = new Socket("192.168.0.105", 9987);
 
             data_in = new DataInputStream(socket.getInputStream());
             data_out = new DataOutputStream(socket.getOutputStream());

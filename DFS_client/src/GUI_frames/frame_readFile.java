@@ -1,9 +1,8 @@
 package GUI_frames;
 
+import DAO.fileDAO;
 import dfs_client.Client;
 import entities.publicFile;
-import java.io.BufferedReader;
-import java.io.FileReader;
 
 /**
  *
@@ -13,33 +12,20 @@ public class frame_readFile extends javax.swing.JFrame {
 
     private publicFile mainFile;
     private Client cl;
+    private fileDAO fd;
     
     public frame_readFile(publicFile file,Client cl) {
         initComponents();
+        fd = new fileDAO();
         this.mainFile = file;
         this.cl = cl;
         init();
-        readFile();
+        
     }
     
     private void init(){
+        ta_fileData.setText(mainFile.getFileData());
         lbl_fileName.setText(mainFile.getFileName());
-    }
-    
-    private void readFile(){
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(mainFile.getLocal_file()));
-            StringBuilder builder = new StringBuilder();
-            String line;
-            
-            while((line = br.readLine()) != null){
-                builder.append(line).append("\n");
-            }
-            ta_fileData.setText(builder.toString());
-            ta_fileData.setCaretPosition(0);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
     
     /**

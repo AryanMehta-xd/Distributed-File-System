@@ -1,7 +1,11 @@
 package GUI_frames;
 
+import DAO.fileDAO;
 import dfs_client.Client;
 import entities.publicFile;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -16,7 +20,8 @@ public class frame_main extends javax.swing.JFrame {
     public ArrayList<publicFile> fileList = new ArrayList<>();
     private Client cl;
     private String clientUsername;
-
+    private fileDAO fd;
+    
     public ArrayList<publicFile> getFileList() {
         return fileList;
     }
@@ -28,6 +33,7 @@ public class frame_main extends javax.swing.JFrame {
     public frame_main(String username) {
         initComponents();
         this.clientUsername = username;
+        fd = new fileDAO();
         init();
         cl = new Client(this);
         cl.start();
@@ -154,14 +160,24 @@ public class frame_main extends javax.swing.JFrame {
 
     private void btn_addFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addFileActionPerformed
         JFileChooser fileChooser = new JFileChooser();
+        String content;
         int response = fileChooser.showSaveDialog(null);
         
         if(response==JFileChooser.APPROVE_OPTION){
-            publicFile pb = new publicFile(fileChooser.getSelectedFile(), clientUsername);
-            int status = cl.sendNewFile(pb);
-            
-            if(status==1){
-                JOptionPane.showMessageDialog(null, "File Added!");
+            File inFile = fileChooser.getSelectedFile();
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(inFile));
+                StringBuilder builder = new StringBuilder();
+                String line;
+                
+                while((line=br.readLine())!=null){
+                    builder.append(line).append("\n");
+                }
+                
+                content = builder.toString();
+                cl.sendNewFile(new publicFile(content,clientUsername,inFile.getName()));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }//GEN-LAST:event_btn_addFileActionPerformed

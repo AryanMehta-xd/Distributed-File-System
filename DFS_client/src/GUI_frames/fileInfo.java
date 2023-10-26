@@ -1,9 +1,7 @@
 package GUI_frames;
 
-import DAO.fileDAO;
 import dfs_client.Client;
 import entities.publicFile;
-import java.io.File;
 import javax.swing.JOptionPane;
 
 /**

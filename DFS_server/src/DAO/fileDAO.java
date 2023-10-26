@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -51,10 +50,6 @@ public class fileDAO {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public void sendFile(Socket clientSoc, publicFile pfile) {
-
     }
 
     public byte[] serializeObject(publicFile object) {

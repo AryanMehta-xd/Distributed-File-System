@@ -1,6 +1,5 @@
 package entities;
 
-import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -8,15 +7,15 @@ import java.io.Serializable;
  * @author Aryan Mehta
  */
 public class publicFile implements Serializable{
-    private File local_file;
+    private String fileData;
     private String file_Cr;
     private String fileName;
     private String lastUpdate;
     
-    public publicFile(File local_file, String file_Cr) {
-        this.local_file = local_file;
+    public publicFile(String fileData, String file_Cr,String name) {
+        this.fileData = fileData;
         this.file_Cr = file_Cr;
-        this.fileName = local_file.getName();
+        this.fileName = name;
     }
 
     public String getLastUpdate() {
@@ -26,13 +25,13 @@ public class publicFile implements Serializable{
     public void setLastUpdate(String lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
-    
-    public File getLocal_file() {
-        return local_file;
+
+    public String getFileData() {
+        return fileData;
     }
 
-    public void setLocal_file(File local_file) {
-        this.local_file = local_file;
+    public void setFileData(String fileData) {
+        this.fileData = fileData;
     }
 
     public String getFile_Cr() {

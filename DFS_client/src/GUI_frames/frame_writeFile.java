@@ -3,11 +3,7 @@ package GUI_frames;
 import DAO.fileDAO;
 import dfs_client.Client;
 import entities.publicFile;
-import java.awt.Font;
 import java.awt.event.KeyEvent;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import javax.swing.JOptionPane;
 
 /**
@@ -20,8 +16,8 @@ public class frame_writeFile extends javax.swing.JFrame {
     private Client cl;
 
     private String fileName;
-    private File contentFile;
-
+    private String contentString;
+    
     private fileDAO fd;
 
     public frame_writeFile(publicFile file, Client cl) {
@@ -29,28 +25,15 @@ public class frame_writeFile extends javax.swing.JFrame {
         this.cl = cl;
         this.mainFile = file;
         this.fileName = file.getFileName();
-        this.contentFile = file.getLocal_file();
+        this.contentString = file.getFileData();
         fd = new fileDAO();
         init();
-        fd.readFromFile(contentFile, ta_fileData);
     }
 
     private void init() {
+        ta_fileData.setText(contentString);
         ta_fileData.setCaretPosition(0);
         lbl_fileName.setText(mainFile.getFileName());
-    }
-
-    private void readFile() {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(mainFile.getLocal_file()));
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                System.out.println(line);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -141,7 +124,6 @@ public class frame_writeFile extends javax.swing.JFrame {
 
     private void ta_fileDataKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ta_fileDataKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_S && evt.isControlDown()) {
-            fd.writeToFile(contentFile, ta_fileData.getText());
             
             int status=JOptionPane.showConfirmDialog(null, "Click Yes to Confirm Changes!");
             if(status==JOptionPane.OK_OPTION){
