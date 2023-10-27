@@ -8,6 +8,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -22,15 +25,23 @@ public class Client extends Thread {
     private fileDAO fd = new fileDAO();
     private frame_main frame;
     private ArrayList<publicFile> arrL = new ArrayList<>();
-
+    private ScheduledExecutorService src;
+    
+    private boolean thread_sts=true;
+    
     public ArrayList<publicFile> getArrL() {
         return arrL;
     }
 
     public Client(frame_main fr) {
         this.frame = fr;
+        src = Executors.newSingleThreadScheduledExecutor();
     }
 
+    public void setThread_sts(boolean thread_sts) {
+        this.thread_sts = thread_sts;
+    }
+    
     @Override
     public void run() {
         try {
@@ -45,6 +56,8 @@ public class Client extends Thread {
 
             getFileList();
 
+            src.scheduleAtFixedRate(updateThread, 0, 1, TimeUnit.SECONDS);
+            
             //start CRUD Operations
             while (!socket.isClosed());
         } catch (Exception e) {
@@ -201,4 +214,10 @@ public class Client extends Thread {
         }
         return 0;
     }
+    
+    private Thread updateThread = new Thread(()->{
+        if(thread_sts){
+            sendRefreshRequest();
+        }
+    });
 }

@@ -33,7 +33,7 @@ public class frame_writeFile extends javax.swing.JFrame {
     private void init() {
         ta_fileData.setText(contentString);
         ta_fileData.setCaretPosition(0);
-        lbl_fileName.setText(mainFile.getFileName());
+        lbl_fileName.setText(mainFile.getFileName()+"(Write Mode)");
     }
 
     /**
@@ -119,6 +119,7 @@ public class frame_writeFile extends javax.swing.JFrame {
 
     private void btn_exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_exitActionPerformed
         cl.sendWriteUnlockRequest(fileName);
+        cl.setThread_sts(true);
         dispose();
     }//GEN-LAST:event_btn_exitActionPerformed
 

@@ -74,7 +74,7 @@ public class Server extends Thread {
         private String clientName;
         private String command = "";
         private boolean status = true;
-
+        
         private HashMap<clientThread,ReentrantReadWriteLock> heldLocks;
         
         private DataInputStream data_in;
@@ -217,10 +217,10 @@ public class Server extends Thread {
 
             data_in.readFully(fb);
             publicFile pf = fd.deserializeObject(fb);
-
+            pf.addFileUpdate(clientName+"(Creator)");
+            
             fileList.add(pf);
             fileLocks.put(pf.getFileName(), new ReentrantReadWriteLock());
-            pf.addFileUpdate(clientName+"(Creator)");
             fd.saveFile(pf);
             fd.addLog(clientName+" NEW FILE ADD REQUEST->"+pf.getFileName()+" :SUCCESS"+" VIA:"+PORT_NUM);
             data_out.writeUTF("FILE_RECEIVED");
@@ -273,8 +273,8 @@ public class Server extends Thread {
             data_in.readFully(b);
             
             publicFile pb = fd.deserializeObject(b);
-            fd.saveFile(pb);
             pb.addFileUpdate(clientName);
+            fd.saveFile(pb);
             fd.addLog(clientName+" FILE UPDATE REQUEST ->"+filename+" :SUCCESS"+" VIA:"+PORT_NUM);
             
             fileList.clear();

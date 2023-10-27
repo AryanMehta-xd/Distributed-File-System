@@ -1,8 +1,9 @@
 package GUI_frames;
 
-import DAO.fileDAO;
 import dfs_client.Client;
 import entities.publicFile;
+import java.util.ArrayList;
+import javax.swing.JRootPane;
 
 /**
  *
@@ -12,20 +13,22 @@ public class frame_readFile extends javax.swing.JFrame {
 
     private publicFile mainFile;
     private Client cl;
-    private fileDAO fd;
+    
+    private ArrayList<String> fileUpdates;
     
     public frame_readFile(publicFile file,Client cl) {
         initComponents();
-        fd = new fileDAO();
+        getRootPane().setWindowDecorationStyle(JRootPane.NONE);
         this.mainFile = file;
         this.cl = cl;
         init();
-        
+        this.fileUpdates = mainFile.getFileUpdates();
     }
     
     private void init(){
         ta_fileData.setText(mainFile.getFileData());
-        lbl_fileName.setText(mainFile.getFileName());
+        ta_fileData.setCaretPosition(0);
+        lbl_fileName.setText(mainFile.getFileName() + "(Read Mode)");
     }
     
     /**
@@ -42,9 +45,10 @@ public class frame_readFile extends javax.swing.JFrame {
         ta_fileData = new javax.swing.JTextArea();
         btn_exit = new javax.swing.JButton();
         lbl_fileName = new javax.swing.JLabel();
+        btn_showUpdates = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setUndecorated(true);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Read Mode");
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -71,24 +75,36 @@ public class frame_readFile extends javax.swing.JFrame {
 
         lbl_fileName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        btn_showUpdates.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btn_showUpdates.setText("Show Updates");
+        btn_showUpdates.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_showUpdatesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 698, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(lbl_fileName, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lbl_fileName, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_showUpdates, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_exit))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btn_exit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn_exit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_showUpdates, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lbl_fileName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 569, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -108,8 +124,13 @@ public class frame_readFile extends javax.swing.JFrame {
 
     private void btn_exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_exitActionPerformed
         cl.sendReadUnlockRequest(mainFile.getFileName());
+        cl.setThread_sts(true);
         dispose();
     }//GEN-LAST:event_btn_exitActionPerformed
+
+    private void btn_showUpdatesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_showUpdatesActionPerformed
+        new frame_showUpdates(fileUpdates, btn_exit).setVisible(true);
+    }//GEN-LAST:event_btn_showUpdatesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -149,6 +170,7 @@ public class frame_readFile extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_exit;
+    private javax.swing.JButton btn_showUpdates;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbl_fileName;

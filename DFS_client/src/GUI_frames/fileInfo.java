@@ -25,7 +25,7 @@ public class fileInfo extends javax.swing.JPanel {
     private void init(){
         fileName = file.getFileName();
         lbl_fileName.setText(fileName);
-        lbl_fileCr.setText("File Creator:"+file.getFile_Cr());
+        lbl_fileCr.setText("Creator:"+file.getFile_Cr());
         lbl_last_update.setText(file.getLastUpdate());
     }
     
@@ -132,6 +132,7 @@ public class fileInfo extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "File Already Being Used!!");
         }else{
             new frame_readFile(file, cl).setVisible(true);
+            cl.setThread_sts(false);
         }
     }//GEN-LAST:event_btn_readActionPerformed
 
@@ -140,6 +141,7 @@ public class fileInfo extends javax.swing.JPanel {
         
         if(status==1){
             new frame_writeFile(file, cl).setVisible(true);
+            cl.setThread_sts(false);
         }else{
             JOptionPane.showMessageDialog(null, "File Already In Use!");
         }
