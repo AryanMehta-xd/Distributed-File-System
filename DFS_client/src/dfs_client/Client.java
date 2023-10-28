@@ -231,15 +231,13 @@ public class Client extends Thread {
     public int sendDeleteRequest(String filename){
         try {
             data_out.writeUTF("DELETE_FILE_INIT");
-            data_out.writeUTF(filename);
+            data_out.writeUTF(filename); 
             
             String res = data_in.readUTF();
-            if(res.equals("DELETE_SUCCESS")){
-                return 1;
-            }else if(res.equals("FILE_IN_USE")){
+            if(res.equals("FILE_IN_USE")){
                 return 2;
-            }else if(res.equals("DELETE_FAIL")){
-                return 0;
+            }else if(res.equals("SUCCESS")){
+                return 1;
             }
         } catch (Exception e) {
             e.printStackTrace();

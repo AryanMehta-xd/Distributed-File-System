@@ -159,15 +159,16 @@ public class fileInfo extends javax.swing.JPanel {
     }//GEN-LAST:event_btn_updateActionPerformed
 
     private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
-        int status = cl.sendDeleteRequest(fileName);
+        cl.setThread_sts(false);
+        int response = JOptionPane.showConfirmDialog(null, "Do you want to delete this File?");
         
-        if(status==1){
-            JOptionPane.showMessageDialog(null, "File Deleted Successfully!!");
-        }else if(status==2){
-            JOptionPane.showMessageDialog(null, "File is in use!");
-        }else if(status==0){
-            JOptionPane.showMessageDialog(null, "Something went wrong!");
+        if(response==JOptionPane.OK_OPTION){
+            int status = cl.sendDeleteRequest(fileName);
+            if(status==1){
+                JOptionPane.showMessageDialog(null, "File Deleted Successfully!");
+            }
         }
+        cl.setThread_sts(true);
     }//GEN-LAST:event_btn_deleteActionPerformed
 
 

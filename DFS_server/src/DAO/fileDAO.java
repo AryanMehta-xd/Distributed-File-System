@@ -100,16 +100,16 @@ public class fileDAO {
         }
     }
     
-    public boolean deleteFile(String filename){
+    public int deleteFile(String filename){
         String fp = LOCAL_DIR+File.separator+filename+".ser";
         
         File f = new File(fp);
-        System.out.println(f.getName());
-//        if(f.exists()){
-//            return f.delete();
-//        }else{
-//            System.out.println("File not Found");
-//        }
-        return false;
+        if(f.exists()){
+            f.delete();
+            return 1;
+        }else{
+            System.out.println("File not Found");
+            return 0;
+        }
     }
 }
