@@ -99,4 +99,17 @@ public class fileDAO {
             e.printStackTrace();
         }
     }
+    
+    public boolean deleteFile(String filename){
+        String fp = LOCAL_DIR+File.separator+filename+".ser";
+        
+        File f = new File(fp);
+        System.out.println(f.getName());
+//        if(f.exists()){
+//            return f.delete();
+//        }else{
+//            System.out.println("File not Found");
+//        }
+        return false;
+    }
 }

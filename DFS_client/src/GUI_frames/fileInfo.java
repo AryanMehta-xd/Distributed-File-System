@@ -27,6 +27,12 @@ public class fileInfo extends javax.swing.JPanel {
         lbl_fileName.setText(fileName);
         lbl_fileCr.setText("Creator:"+file.getFile_Cr());
         lbl_last_update.setText(file.getLastUpdate());
+        
+        if(file.getFile_Cr().equals(cl.getClientUsername())){
+            btn_delete.setVisible(true);
+        }else{
+            btn_delete.setVisible(false);
+        }
     }
     
     /**
@@ -83,6 +89,11 @@ public class fileInfo extends javax.swing.JPanel {
         btn_delete.setText("D");
         btn_delete.setFocusPainted(false);
         btn_delete.setOpaque(true);
+        btn_delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_deleteActionPerformed(evt);
+            }
+        });
 
         lbl_last_update.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
 
@@ -129,7 +140,7 @@ public class fileInfo extends javax.swing.JPanel {
         int status = cl.sendReadRequest(fileName);
         
         if(status==0){
-            JOptionPane.showMessageDialog(null, "File Already Being Used!!");
+            JOptionPane.showMessageDialog(null, "The File is being Edited!");
         }else{
             new frame_readFile(file, cl).setVisible(true);
             cl.setThread_sts(false);
@@ -143,9 +154,21 @@ public class fileInfo extends javax.swing.JPanel {
             new frame_writeFile(file, cl).setVisible(true);
             cl.setThread_sts(false);
         }else{
-            JOptionPane.showMessageDialog(null, "File Already In Use!");
+            JOptionPane.showMessageDialog(null, "File is Already In Use!");
         }
     }//GEN-LAST:event_btn_updateActionPerformed
+
+    private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
+        int status = cl.sendDeleteRequest(fileName);
+        
+        if(status==1){
+            JOptionPane.showMessageDialog(null, "File Deleted Successfully!!");
+        }else if(status==2){
+            JOptionPane.showMessageDialog(null, "File is in use!");
+        }else if(status==0){
+            JOptionPane.showMessageDialog(null, "Something went wrong!");
+        }
+    }//GEN-LAST:event_btn_deleteActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

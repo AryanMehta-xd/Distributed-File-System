@@ -76,7 +76,7 @@ public class frame_readFile extends javax.swing.JFrame {
         lbl_fileName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         btn_showUpdates.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btn_showUpdates.setText("Show Updates");
+        btn_showUpdates.setText("Show Changes");
         btn_showUpdates.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_showUpdatesActionPerformed(evt);

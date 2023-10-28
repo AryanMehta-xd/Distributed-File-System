@@ -6,8 +6,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -16,6 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -79,8 +79,6 @@ public class Server extends Thread {
         
         private DataInputStream data_in;
         private DataOutputStream data_out;
-        private ObjectOutputStream obj_out;
-        private ObjectInputStream obj_in;
         private fileDAO fd;
 
         public clientThread(Socket sc) {
@@ -125,6 +123,10 @@ public class Server extends Thread {
                             break;
                         case "FILE_UPDATE_INIT":
                             handleFileUpdateRequest();
+                            break;
+                            
+                        case "DELETE_FILE_INIT":
+                            handleFileDeleteRequest();
                             break;
                         default:
                             break;
@@ -281,6 +283,29 @@ public class Server extends Thread {
             fileList = fd.getAllFiles();
             
             data_out.writeUTF("UPDATE_SUCCESS");
+        }
+        
+        private void handleFileDeleteRequest(){
+            try {
+                String filename = data_in.readUTF();
+                ReentrantReadWriteLock rll = fileLocks.get(filename);
+                
+                Lock wl = rll.writeLock();
+                Lock rl = rll.readLock();
+                
+                if(rll.isWriteLocked()||rll.getReadLockCount()>0){
+                    data_out.writeUTF("FILE_IN_USE");
+                }else{
+                    boolean sts = fd.deleteFile(filename);
+                    if(sts){
+                        data_out.writeUTF("DELETE_SUCCESS");
+                    }else{
+                        data_out.writeUTF("DELETE_FAIL");
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 }

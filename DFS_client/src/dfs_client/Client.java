@@ -27,6 +27,8 @@ public class Client extends Thread {
     private ArrayList<publicFile> arrL = new ArrayList<>();
     private ScheduledExecutorService src;
     
+    private String clientUsername;
+    
     private boolean thread_sts=true;
     
     public ArrayList<publicFile> getArrL() {
@@ -41,6 +43,10 @@ public class Client extends Thread {
     public void setThread_sts(boolean thread_sts) {
         this.thread_sts = thread_sts;
     }
+
+    public String getClientUsername() {
+        return clientUsername;
+    }
     
     @Override
     public void run() {
@@ -53,7 +59,8 @@ public class Client extends Thread {
 
             //write Username to server
             data_out.writeUTF(frame.getClientUsername());
-
+            this.clientUsername = frame.getClientUsername();
+            
             getFileList();
 
             src.scheduleAtFixedRate(updateThread, 0, 1, TimeUnit.SECONDS);
@@ -220,4 +227,23 @@ public class Client extends Thread {
             sendRefreshRequest();
         }
     });
+    
+    public int sendDeleteRequest(String filename){
+        try {
+            data_out.writeUTF("DELETE_FILE_INIT");
+            data_out.writeUTF(filename);
+            
+            String res = data_in.readUTF();
+            if(res.equals("DELETE_SUCCESS")){
+                return 1;
+            }else if(res.equals("FILE_IN_USE")){
+                return 2;
+            }else if(res.equals("DELETE_FAIL")){
+                return 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    } 
 }

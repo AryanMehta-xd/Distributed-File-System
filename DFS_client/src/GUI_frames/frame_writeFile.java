@@ -1,6 +1,5 @@
 package GUI_frames;
 
-import DAO.fileDAO;
 import dfs_client.Client;
 import entities.publicFile;
 import java.awt.event.KeyEvent;
@@ -17,8 +16,6 @@ public class frame_writeFile extends javax.swing.JFrame {
 
     private String fileName;
     private String contentString;
-    
-    private fileDAO fd;
 
     public frame_writeFile(publicFile file, Client cl) {
         initComponents();
@@ -26,7 +23,6 @@ public class frame_writeFile extends javax.swing.JFrame {
         this.mainFile = file;
         this.fileName = file.getFileName();
         this.contentString = file.getFileData();
-        fd = new fileDAO();
         init();
     }
 
@@ -50,9 +46,9 @@ public class frame_writeFile extends javax.swing.JFrame {
         ta_fileData = new javax.swing.JTextArea();
         btn_exit = new javax.swing.JButton();
         lbl_fileName = new javax.swing.JLabel();
+        btn_showUpdates = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setUndecorated(true);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -82,6 +78,14 @@ public class frame_writeFile extends javax.swing.JFrame {
 
         lbl_fileName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        btn_showUpdates.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btn_showUpdates.setText("Show Changes");
+        btn_showUpdates.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_showUpdatesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -90,13 +94,17 @@ public class frame_writeFile extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(lbl_fileName, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_showUpdates)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_exit))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btn_exit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn_exit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_showUpdates))
                     .addComponent(lbl_fileName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE))
@@ -138,6 +146,10 @@ public class frame_writeFile extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ta_fileDataKeyPressed
 
+    private void btn_showUpdatesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_showUpdatesActionPerformed
+        new frame_showUpdates(mainFile.getFileUpdates(), btn_showUpdates).setVisible(true);
+    }//GEN-LAST:event_btn_showUpdatesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -175,6 +187,7 @@ public class frame_writeFile extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_exit;
+    private javax.swing.JButton btn_showUpdates;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbl_fileName;
