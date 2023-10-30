@@ -80,6 +80,7 @@ public class ServerClientAuth extends Thread {
                         fd.addLog(username+" AUTHENTICATION REQUEST VIA:9987");
                         
                         data_out.writeInt(dao.verifyUser(username, password));
+                        fd.addLog("ACCOUNT CREATED ->SUCCESS");
                     }else if(command.equals("USER_DISCONNECT_INIT")){
                         System.out.println("User Disconnected!!");
                         fd.addLog("CLIENT DISCONNECTED ->"+clientSocket.getInetAddress()+" VIA:9987");

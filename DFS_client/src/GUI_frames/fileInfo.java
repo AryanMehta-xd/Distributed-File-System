@@ -29,9 +29,9 @@ public class fileInfo extends javax.swing.JPanel {
         lbl_last_update.setText(file.getLastUpdate());
         
         if(file.getFile_Cr().equals(cl.getClientUsername())){
-            btn_delete.setVisible(true);
+            btn_delete.setEnabled(true);
         }else{
-            btn_delete.setVisible(false);
+            btn_delete.setEnabled(false);
         }
     }
     
