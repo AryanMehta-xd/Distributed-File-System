@@ -43,12 +43,12 @@ public class Server extends Thread {
             ss = new ServerSocket(PORT_NUM);
             System.out.println("Server Listening on:" + PORT_NUM);
 
-            fdAO.addLog("Server Started on Port:"+PORT_NUM);
-            
+            fdAO.addLog("Server Started on Port:" + PORT_NUM);
+
             while (true) {
                 Socket soc = ss.accept();
                 System.out.println("Connection Established via :" + soc.getInetAddress());
-                
+
                 clientThread cl = new clientThread(soc);
                 Thread th = new Thread(cl);
                 th.start();
@@ -66,15 +66,24 @@ public class Server extends Thread {
         }
     }
 
+    private publicFile getFileByName(String fileName) {
+        for (publicFile pl : fileList) {
+            if (pl.getFileName().equals(fileName)) {
+                return pl;
+            }
+        }
+        return null;
+    }
+
     class clientThread implements Runnable {
 
         private Socket clientSocket;
         private String clientName;
         private String command = "";
         private boolean status = true;
-        
-        private HashMap<clientThread,ReentrantReadWriteLock> heldLocks;
-        
+
+        private HashMap<clientThread, ReentrantReadWriteLock> heldLocks;
+
         private DataInputStream data_in;
         private DataOutputStream data_out;
         private fileDAO fd;
@@ -92,9 +101,9 @@ public class Server extends Thread {
                 data_out = new DataOutputStream(clientSocket.getOutputStream());
 
                 clientName = data_in.readUTF();
-                System.out.println(clientName+" Connected!!");
+                System.out.println(clientName + " Connected!!");
 
-                fd.addLog(clientName+" Connected Via IP:"+clientSocket.getInetAddress()+" VIA:"+PORT_NUM);
+                fd.addLog(clientName + " Connected Via IP:" + clientSocket.getInetAddress() + " VIA:" + PORT_NUM);
                 sendFileList();
 
                 while (status) {
@@ -122,7 +131,7 @@ public class Server extends Thread {
                         case "FILE_UPDATE_INIT":
                             handleFileUpdateRequest();
                             break;
-                            
+
                         case "DELETE_FILE_INIT":
                             handleFileDeleteRequest();
                             break;
@@ -133,10 +142,10 @@ public class Server extends Thread {
 
             } catch (SocketException | EOFException se) {
                 System.out.println(clientName + " Disconnected!!");
-                fd.addLog(clientName+" DISCONNECTED"+" VIA:"+PORT_NUM);
+                fd.addLog(clientName + " DISCONNECTED" + " VIA:" + PORT_NUM);
                 unlockAllFiles();
                 shutDown();
-            } catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -166,14 +175,14 @@ public class Server extends Thread {
             if (fLock.isWriteLocked()) {
                 data_out.writeUTF("FILE_ALREADY_LOCKED");
                 System.out.println("Lock Denied!");
-                fd.addLog(clientName+" READ LOCK REQUEST ->"+req_fileName+" :DENIED"+" VIA:"+PORT_NUM);
+                fd.addLog(clientName + " READ LOCK REQUEST ->" + req_fileName + " :DENIED" + " VIA:" + PORT_NUM);
             } else {
                 //aquire the lock
                 readLock.lock();
                 System.out.println("Locked!");
                 heldLocks.put(this, fLock);
                 data_out.writeUTF("FILE_LOCK_AVAILABLE");
-                fd.addLog(clientName+" READ LOCK REQUEST ->"+req_fileName+" :ACCEPTED"+" VIA:"+PORT_NUM);
+                fd.addLog(clientName + " READ LOCK REQUEST ->" + req_fileName + " :ACCEPTED" + " VIA:" + PORT_NUM);
             }
         }
 
@@ -188,12 +197,12 @@ public class Server extends Thread {
             //either read or write lock is taken
             if (flock.isWriteLocked() || flock.getReadLockCount() != 0) {
                 data_out.writeUTF("FILE_ALREADY_LOCKED");
-                fd.addLog(clientName+" WRITE LOCK REQUEST ->"+req_fileName+" :DENIED"+" VIA:"+PORT_NUM);
+                fd.addLog(clientName + " WRITE LOCK REQUEST ->" + req_fileName + " :DENIED" + " VIA:" + PORT_NUM);
             } else {
                 writeLock.lock();
                 heldLocks.put(this, flock);
                 data_out.writeUTF("FILE_LOCK_AQUIRED");
-                fd.addLog(clientName+" WRITE LOCK REQUEST ->"+req_fileName+" :ACCEPTED"+" VIA:"+PORT_NUM);
+                fd.addLog(clientName + " WRITE LOCK REQUEST ->" + req_fileName + " :ACCEPTED" + " VIA:" + PORT_NUM);
             }
         }
 
@@ -209,7 +218,7 @@ public class Server extends Thread {
             data_out.writeUTF("FILE_READ_UNLOCKED");
             heldLocks.remove(this, flLock);
             System.out.println(req_fileName + " Unlocked!!");
-            fd.addLog(clientName+" READ UNLOCK REQUEST ->"+req_fileName+" :SUCCESS"+" VIA:"+PORT_NUM);
+            fd.addLog(clientName + " READ UNLOCK REQUEST ->" + req_fileName + " :SUCCESS" + " VIA:" + PORT_NUM);
         }
 
         private void handleNewFile() throws IOException {
@@ -217,12 +226,12 @@ public class Server extends Thread {
 
             data_in.readFully(fb);
             publicFile pf = fd.deserializeObject(fb);
-            pf.addFileUpdate(clientName+"(Creator)");
-            
+            pf.addFileUpdate(clientName + "(Creator)");
+
             fileList.add(pf);
             fileLocks.put(pf.getFileName(), new ReentrantReadWriteLock());
             fd.saveFile(pf);
-            fd.addLog(clientName+" NEW FILE ADD REQUEST->"+pf.getFileName()+" :SUCCESS"+" VIA:"+PORT_NUM);
+            fd.addLog(clientName + " NEW FILE ADD REQUEST->" + pf.getFileName() + " :SUCCESS" + " VIA:" + PORT_NUM);
             data_out.writeUTF("FILE_RECEIVED");
         }
 
@@ -236,60 +245,72 @@ public class Server extends Thread {
                 data_out.write(srlF);
             }
         }
-        
-        private void handleWriteUnlockRequest() throws IOException{
+
+        private void handleWriteUnlockRequest() throws IOException {
             String fileName = data_in.readUTF();
-            
+
             ReentrantReadWriteLock writeLock = getFileLocks(fileName);
             Lock wlock = writeLock.writeLock();
-            
+
             wlock.unlock();
             data_out.writeUTF("FILE_WRITE_UNLOCKED");
             heldLocks.remove(this, writeLock);
-            fd.addLog(clientName+" WRITE UNLOCK REQUEST ->"+fileName+" :SUCCESS"+" VIA:"+PORT_NUM);
+            fd.addLog(clientName + " WRITE UNLOCK REQUEST ->" + fileName + " :SUCCESS" + " VIA:" + PORT_NUM);
         }
-        
-        private void unlockAllFiles(){
+
+        private void unlockAllFiles() {
             for (Map.Entry<clientThread, ReentrantReadWriteLock> entry : heldLocks.entrySet()) {
                 ReentrantReadWriteLock value = entry.getValue();
                 Lock rl = value.readLock();
                 Lock wl = value.writeLock();
-                
-                if(value.isWriteLocked()){
+
+                if (value.isWriteLocked()) {
                     wl.unlock();
                     System.out.println("Write Unlocked!");
                 }
-                if(value.getReadLockCount()!=0){
+                if (value.getReadLockCount() != 0) {
                     rl.unlock();
                     System.out.println("Read Unlocked!");
                 }
             }
         }
-        
-        private void handleFileUpdateRequest() throws IOException{
+
+        private void handleFileUpdateRequest() throws IOException {
             String filename = data_in.readUTF();
             int size = data_in.readInt();
-            byte[] b=  new byte[size];
+            byte[] b = new byte[size];
             data_in.readFully(b);
-            
+
             publicFile pb = fd.deserializeObject(b);
             pb.addFileUpdate(clientName);
             fd.saveFile(pb);
-            fd.addLog(clientName+" FILE UPDATE REQUEST ->"+filename+" :SUCCESS"+" VIA:"+PORT_NUM);
-            
+            fd.addLog(clientName + " FILE UPDATE REQUEST ->" + filename + " :SUCCESS" + " VIA:" + PORT_NUM);
+
             fileList.clear();
             fileList = fd.getAllFiles();
-            
+
             data_out.writeUTF("UPDATE_SUCCESS");
         }
-        
-        private void handleFileDeleteRequest()throws IOException{
+
+        private void handleFileDeleteRequest() throws IOException {
             String filename = data_in.readUTF();
-            int sts = fd.deleteFile(filename);
-            System.out.println(sts);
-            data_out.writeUTF("SUCCESS");
-            fileList.clear();
-            fileList = fd.getAllFiles();
+            ReentrantReadWriteLock rll = fileLocks.get(filename);
+
+            //if any other user has access the file
+            if (rll.isWriteLocked() || (rll.getReadLockCount()) != 0) {
+                data_out.writeUTF("FILE_IN_USE");
+                fd.addLog("FILE DELETE REQUEST ->"+filename+"Via :"+clientName+" STATUS:"+" BLOCKED");
+            } else {
+                int sts = fd.deleteFile(filename);
+                if (sts == 1) {
+                    fileList.remove(getFileByName(filename));
+                    fileLocks.remove(filename);
+                    fileList = fd.getAllFiles();
+                    data_out.writeUTF("SUCCESS");
+                    fd.addLog("FILE DELETE REQUEST ->"+filename+"Via :"+clientName+" STATUS:"+" SUCCESS");
+                }
+            }
         }
+
     }
 }

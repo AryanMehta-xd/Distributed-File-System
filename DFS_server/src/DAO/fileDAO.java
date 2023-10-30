@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalDateTime;
@@ -29,6 +30,7 @@ public class fileDAO {
         try {
             obj_out = new ObjectOutputStream(new FileOutputStream(filePath));
             obj_out.writeObject(pFile);
+            obj_out.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -43,6 +45,7 @@ public class fileDAO {
                 for (File fl : allFiles) {
                     obj_in = new ObjectInputStream(new FileInputStream(fl));
                     fileList.add((publicFile) obj_in.readObject());
+                    obj_in.close();
                 }
                 return fileList;
             } else {
@@ -100,8 +103,8 @@ public class fileDAO {
         }
     }
     
-    public int deleteFile(String filename){
-        String fp = LOCAL_DIR+File.separator+filename+".ser";
+    public int deleteFile(String fileName){
+        String fp = LOCAL_DIR+File.separator+fileName+".ser";
         
         File f = new File(fp);
         if(f.exists()){
@@ -111,5 +114,10 @@ public class fileDAO {
             System.out.println("File not Found");
             return 0;
         }
+    }
+    
+    private void closeStreams() throws IOException{
+        obj_in.close();
+        obj_out.close();
     }
 }
