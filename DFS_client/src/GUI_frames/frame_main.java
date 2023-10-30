@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import net.miginfocom.swing.MigLayout;
 
 /**
